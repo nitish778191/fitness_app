@@ -195,6 +195,34 @@ function filterReports() {
         }
     }
 }
+function filterReports() {
+    const input = document.getElementById('searchInput');
+    const filter = input.value.trim().toLowerCase();
+    const buttons = container.getElementsByClassName('collapsible');
+
+    for (let i = 0; i < buttons.length; i++) {
+        const reportName = buttons[i].textContent.trim().toLowerCase();
+        const reportContent = buttons[i].nextElementSibling;
+
+        // Split the report name into individual words
+        const reportWords = reportName.split(/\s+/);
+
+        // Check if any word matches the search input
+        const match = reportWords.some(word => word.includes(filter));
+
+        if (match) {
+            buttons[i].style.display = "block";
+            if (buttons[i].classList.contains('active')) {
+                reportContent.style.display = "block";
+            } else {
+                reportContent.style.display = "none";
+            }
+        } else {
+            buttons[i].style.display = "none";
+            reportContent.style.display = "none";
+        }
+    }
+}
 
 
 
