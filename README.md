@@ -245,3 +245,36 @@ document.getElementById('searchInput').addEventListener('change
 
 
 
+
+const input = document.getElementById('searchInput');
+const filter = input.value.trim().toLowerCase();
+const buttons = container.getElementsByClassName('collapsible');
+
+for (let i = 0; i < buttons.length; i++) {
+    const reportName = buttons[i].textContent.trim().toLowerCase();
+    const reportContent = buttons[i].nextElementSibling;
+
+    // Split the search query into individual words
+    const searchWords = filter.split(/\s+/);
+
+    // Split the report name into individual words
+    const reportWords = reportName.split(/\s+/);
+
+    // Check if any word from search query matches any word in the report name
+    const match = searchWords.some(searchWord => reportWords.some(reportWord => reportWord.includes(searchWord)));
+
+    if (match) {
+        buttons[i].style.display = "block";
+        if (buttons[i].classList.contains('active')) {
+            reportContent.style.display = "block";
+        } else {
+            reportContent.style.display = "none";
+        }
+    } else {
+        buttons[i].style.display = "none";
+        reportContent.style.display = "none";
+    }
+}
+
+
+
