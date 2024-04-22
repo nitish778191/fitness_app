@@ -66,22 +66,6 @@
     </div>
 
     <script>
-        function filterReports() {
-            const input = document.getElementById('searchInput');
-            const filter = input.value.toLowerCase();
-            const buttons = container.getElementsByTagName('button');
-            for (let i = 0; i < buttons.length; i++) {
-                let name = buttons[i].dataset.name;
-                if (name.indexOf(filter) > -1) {
-                    buttons[i].style.display = "";
-                    buttons[i].nextElementSibling.style.display = buttons[i].classList.contains('active') ? "block" : "none";
-                } else {
-                    buttons[i].style.display = "none";
-                    buttons[i].nextElementSibling.style.display = "none";
-                }
-            }
-        }
-
         const jsonData = [
             // Your JSON data array here
         ];
@@ -93,7 +77,7 @@
             const reportButton = document.createElement('button');
             reportButton.textContent = report.name ? `${report.name} (ID: ${report.id})` : 'Unnamed Report';
             reportButton.className = 'collapsible';
-            reportButton.dataset.name = report.name.toLowerCase(); // For searching by name
+            reportButton.dataset.name = report.name ? report.name.toLowerCase() : ''; // For searching by name
 
             const reportContent = document.createElement('div');
             reportContent.className = 'content';
@@ -146,6 +130,22 @@
                 reportContent.style.display = reportContent.style.display === 'block' ? 'none' : 'block';
             });
         });
+
+        function filterReports() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const buttons = container.getElementsByTagName('button');
+            for (let i = 0; i < buttons.length; i++) {
+                let name = buttons[i].dataset.name;
+                if (name.indexOf(filter) > -1) {
+                    buttons[i].style.display = "";
+                    buttons[i].nextElementSibling.style.display = buttons[i].classList.contains('active') ? "block" : "none";
+                } else {
+                    buttons[i].style.display = "none";
+                    buttons[i].nextElementSibling.style.display = "none";
+                }
+            }
+        }
     </script>
 </body>
 </html>
