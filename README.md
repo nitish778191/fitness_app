@@ -1,5 +1,3 @@
-# fitness_app
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -68,6 +66,22 @@
     </div>
 
     <script>
+        function filterReports() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const buttons = container.getElementsByTagName('button');
+            for (let i = 0; i < buttons.length; i++) {
+                let name = buttons[i].dataset.name;
+                if (name.indexOf(filter) > -1) {
+                    buttons[i].style.display = "";
+                    buttons[i].nextElementSibling.style.display = buttons[i].classList.contains('active') ? "block" : "none";
+                } else {
+                    buttons[i].style.display = "none";
+                    buttons[i].nextElementSibling.style.display = "none";
+                }
+            }
+        }
+
         const jsonData = [
             // Your JSON data array here
         ];
@@ -132,22 +146,6 @@
                 reportContent.style.display = reportContent.style.display === 'block' ? 'none' : 'block';
             });
         });
-
-        function filterReports() {
-            const input = document.getElementById('searchInput');
-            const filter = input.value.toLowerCase();
-            const buttons = container.getElementsByTagName('button');
-            for (let i = 0; i < buttons.length; i++) {
-                let name = buttons[i].dataset.name;
-                if (name.indexOf(filter) > -1) {
-                    buttons[i].style.display = "";
-                    buttons[i].nextElementSibling.style.display = buttons[i].classList.contains('active') ? "block" : "none";
-                } else {
-                    buttons[i].style.display = "none";
-                    buttons[i].nextElementSibling.style.display = "none";
-                }
-            }
-        }
     </script>
 </body>
 </html>
