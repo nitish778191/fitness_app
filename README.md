@@ -226,3 +226,22 @@ function filterReports() {
 
 
 
+function updateSearchCount(count) {
+    const searchCount = document.getElementById('searchCount');
+    if (searchCount) {
+        searchCount.textContent = `Number of search results: ${count}`;
+    }
+}
+
+// Function to clear search input and update search count
+function clearSearch() {
+    const input = document.getElementById('searchInput');
+    input.value = ''; // Clear the search input
+    filterReports(); // Reapply filter to update display
+}
+
+// Clear search input and update count when input is cleared
+document.getElementById('searchInput').addEventListener('change
+
+
+
