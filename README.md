@@ -1,3 +1,41 @@
+import json
+
+def correct_json(json_file_path):
+    try:
+        # Read JSON file
+        with open(json_file_path, 'r') as file:
+            data = json.load(file)
+            
+        # Dump data back to string to check for errors
+        json_str = json.dumps(data)
+        
+        # Check for syntax errors
+        try:
+            json.loads(json_str)
+            print("No syntax errors found.")
+        except json.JSONDecodeError as e:
+            print("Syntax error found. Attempting to correct...")
+            # Attempt to correct syntax errors
+            corrected_json_str = json_str[:e.pos] + json_str[e.pos+1:]
+            corrected_data = json.loads(corrected_json_str)
+            
+            # Write corrected data back to file
+            with open(json_file_path, 'w') as file:
+                json.dump(corrected_data, file, indent=4)
+                
+            print("Syntax error corrected.")
+    except FileNotFoundError:
+        print("File not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+# Example usage:
+json_file_path = 'example.json'  # Change this to your JSON file path
+correct_json(json_file_path)
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
