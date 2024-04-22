@@ -149,3 +149,28 @@
     </script>
 </body>
 </html>
+
+function filterReports() {
+    const input = document.getElementById('searchInput');
+    const filter = input.value.toLowerCase();
+    const buttons = container.getElementsByClassName('collapsible');
+
+    for (let i = 0; i < buttons.length; i++) {
+        let name = buttons[i].dataset.name;
+        const reportContent = buttons[i].nextElementSibling;
+
+        if (name && name.includes(filter)) {
+            buttons[i].style.display = "block";
+            if (buttons[i].classList.contains('active')) {
+                reportContent.style.display = "block";
+            } else {
+                reportContent.style.display = "none";
+            }
+        } else {
+            buttons[i].style.display = "none";
+            reportContent.style.display = "none";
+        }
+    }
+}
+
+
