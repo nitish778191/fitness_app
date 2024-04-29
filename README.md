@@ -1,37 +1,67 @@
-import json
-
-def correct_json(json_file_path):
-    try:
-        # Read JSON file
-        with open(json_file_path, 'r') as file:
-            data = json.load(file)
-            
-        # Dump data back to string to check for errors
-        json_str = json.dumps(data)
-        
-        # Check for syntax errors
-        try:
-            json.loads(json_str)
-            print("No syntax errors found.")
-        except json.JSONDecodeError as e:
-            print("Syntax error found. Attempting to correct...")
-            # Attempt to correct syntax errors
-            corrected_json_str = json_str[:e.pos] + json_str[e.pos+1:]
-            corrected_data = json.loads(corrected_json_str)
-            
-            # Write corrected data back to file
-            with open(json_file_path, 'w') as file:
-                json.dump(corrected_data, file, indent=4)
-                
-            print("Syntax error corrected.")
-    except FileNotFoundError:
-        print("File not found.")
-    except Exception as e:
-        print(f"An error occurred: {e}")
+def enrichment_python(input_value):
+    
+    rawData = ""
+    resultData = ""
+    returnData = ""
+    keyFields = ""
+    contextData = ""
+    error = ""
+    
+    patterns =   {
+                    
+                    'domain': r'^(?!-)[A-Za-z0-9-]+([\\-\\.]{1}[a-z0-9]+)*\\.[A-Za-z]{2,6}$',
+                    'url': r'^(https?://)?[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,})(:[0-9]{1,5})?(/.*)?$',
+                    'ip': (r'^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}'
+                           r'(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
+                           r'|^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|'
+                           r'([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:'
+                           r'[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}'
+                           r'(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}'
+                           r'(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}'
+                           r'(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}'
+                           r'(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:'
+                           r'((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))$'),
+                    'hash': r'^([a-f0-9]{32}|[a-f0-9]{40}|[a-f0-9]{64})$'  }
+                      
+    
+    
+    
+    for indicator, pattern in patterns.items():
+        if re.match(pattern, input_value,re.IGNORECASE):
+            returnData=indicator
+            break
+        else:
+            returnData=""
+   
 
 # Example usage:
-json_file_path = 'example.json'  # Change this to your JSON file path
-correct_json(json_file_path)
+# print("URL Valid:", validate("https://www.example.com", "url"))
+# print("Domain Valid:", validate("example.com", "domain"))
+# print("IP Valid:", validate("192.168.0.1", "ip"))
+# print("Hash Valid:", validate("5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", "hash"))
+
+    # input_value=input()
+    
+    # if validate(input_value,"url"):
+    #     returnData="URL"
+    # elif(input_value,"domain"):
+    #     returnData="Domain"
+    # elif(input_value,"IP"):
+    #     returnData="IP"
+    # elif(input_value,"hash"):
+    #     returnData="Hash"
+    # else:
+    #     returnData=""
+    
+
+    
+
+
+    
+    
+    
+    return pb.returnOutputModel(resultData, returnData, keyFields, contextData, rawData, error)
+    
 
 
 
