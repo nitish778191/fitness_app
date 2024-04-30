@@ -6,6 +6,8 @@ def enrichment_python(input_value):
     keyFields = ""
     contextData = ""
     error = ""
+    artifacttype=""
+    artifactvalue=input_value
     
     patterns =   {
                     
@@ -29,10 +31,17 @@ def enrichment_python(input_value):
     for indicator, pattern in patterns.items():
         if re.match(pattern, input_value,re.IGNORECASE):
             returnData=indicator
+            artifacttype=indicator
+            
             break
         else:
             returnData=""
    
+   
+    contextData=[{
+                      "artifactType":artifacttype ,
+                      "artifactValue":artifactvalue
+                  } ]
 
 # Example usage:
 # print("URL Valid:", validate("https://www.example.com", "url"))
@@ -62,7 +71,10 @@ def enrichment_python(input_value):
     
     return pb.returnOutputModel(resultData, returnData, keyFields, contextData, rawData, error)
     
-
+    
+    
+    
+    
 
 
 
