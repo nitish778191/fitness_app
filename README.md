@@ -1,81 +1,44 @@
+    import re
+
 def enrichment_python(input_value):
-    
     rawData = ""
     resultData = ""
     returnData = ""
     keyFields = ""
-    contextData = ""
+    contextData = []
     error = ""
-    artifacttype=""
-    artifactvalue=input_value
+    artifacttype = ""
+    artifactvalue = input_value
     
-    patterns =   {
-                    
-                    'domain': r'^(?!-)[A-Za-z0-9-]+([\\-\\.]{1}[a-z0-9]+)*\\.[A-Za-z]{2,6}$',
-                    'url': r'^(https?://)?[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,})(:[0-9]{1,5})?(/.*)?$',
-                    'ip': (r'^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}'
-                           r'(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
-                           r'|^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|'
-                           r'([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:'
-                           r'[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}'
-                           r'(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}'
-                           r'(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}'
-                           r'(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}'
-                           r'(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:'
-                           r'((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))$'),
-                    'hash': r'^([a-f0-9]{32}|[a-f0-9]{40}|[a-f0-9]{64})$'  }
-                      
-    
-    
+    patterns = {
+        'domain': r'^(?!-)[A-Za-z0-9-]+([-\\.]{1}[a-z0-9]+)*\.[A-Za-z]{2,6}$',
+        'url': r'^(https?://)?[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,})(:[0-9]{1,5})?(/.*)?$',
+        'ip': (r'^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}'
+               r'(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
+               r'|^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|'
+               r'([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:'
+               r'[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}'
+               r'(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}'
+               r'(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}'
+               r'(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}'
+               r'(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:'
+               r'((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))$'),
+        'hash': r'^([a-f0-9]{32}|[a-f0-9]{40}|[a-f0-9]{64})$'
+    }
     
     for indicator, pattern in patterns.items():
-        if re.match(pattern, input_value,re.IGNORECASE):
-            returnData=indicator
-            artifacttype=indicator
-            
+        if re.match(pattern, input_value, re.IGNORECASE):
+            returnData = indicator
+            artifacttype = indicator
             break
-        else:
-            returnData=""
    
-   
-    contextData=[{
-                      "artifactType":artifacttype ,
-                      "artifactValue":artifactvalue
-                  } ]
+    if artifacttype:
+        contextData.append({
+            "artifactType": artifacttype,
+            "artifactValue": artifactvalue
+        })
 
-# Example usage:
-# print("URL Valid:", validate("https://www.example.com", "url"))
-# print("Domain Valid:", validate("example.com", "domain"))
-# print("IP Valid:", validate("192.168.0.1", "ip"))
-# print("Hash Valid:", validate("5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", "hash"))
-
-    # input_value=input()
-    
-    # if validate(input_value,"url"):
-    #     returnData="URL"
-    # elif(input_value,"domain"):
-    #     returnData="Domain"
-    # elif(input_value,"IP"):
-    #     returnData="IP"
-    # elif(input_value,"hash"):
-    #     returnData="Hash"
-    # else:
-    #     returnData=""
-    
-
-    
-
-
-    
-    
-    
-    return pb.returnOutputModel(resultData, returnData, keyFields, contextData, rawData, error)
-    
-    
-    
-    
-    
-
+    return contextData
 
 
 <!DOCTYPE html>
