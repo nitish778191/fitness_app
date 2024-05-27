@@ -1,3 +1,53 @@
+def urlEnrichmentHTML(anomalits, virustotal, url):
+    
+    body_html_table = "<!DOCTYPE html><html><head><title>URL Enrichment</title><style>table.table1 {table-layout: fixed; width: 800px; border: 1px solid white; border-collapse: collapse;} table.table1 td {border: 0.5px solid white; padding: 0; white-space:normal; font-weight: lighter;} table.table1 th {border: 0.5px solid white; padding: 0; white-space:normal;}</style></head><body>"
+    
+    try: 
+        for i in range(len(url)):
+            # Populate URL
+            body_html_table += f"<div style=\"overflow-x:auto;\"><table class=\"table1\"; style=\"font-family:arial; color:white; font-size: 12px;\"><tr><th align=\"left\"; valign=\"top\"; width=\"20%\";>URL</th></tr>"
+            body_html_table += f"<tr><td align=\"left\"; valign=\"top\";>{url[i]}</td></tr></table></div><br>"
+
+            # Anomali Data
+            body_html_table += "<div style=\"overflow-x:auto;\"><table class=\"table1\"; style=\"font-family:arial; color:white; font-size: 12px;\"><tr><th align=\"left\"; valign=\"top\"; width=\"20%\";>Anomali</th></tr>"
+            body_html_table += "<tr><th align=\"left\"; valign=\"top\"; width=\"20%\"; colspan=\"5\";>Confidence</th><th align=\"left\"; valign=\"top\"; width=\"20%\";>Severity</th><th align=\"left\"; valign=\"top\"; width=\"20%\";>Itype</th><th align=\"left\"; valign=\"top\"; width=\"20%\";>Status</th><th align=\"left\"; valign=\"top\"; width=\"20%\";>Source</th></tr>"
+
+            for anomali in anomalits:
+                if url[i] == anomali['url']:
+                    confidence = anomali.get('Confidence', "")
+                    severity = anomali.get('Severity', "")
+                    itype = anomali.get('itype', "")
+                    status = anomali.get('Status', "")
+                    source = anomali.get('Source', "")
+
+                    body_html_table += f"<tr><td align=\"left\"; valign=\"top\";>{confidence}</td><td align=\"left\"; valign=\"top\";>{severity}</td><td align=\"left\"; valign=\"top\";>{itype}</td><td align=\"left\"; valign=\"top\";>{status}</td><td align=\"left\"; valign=\"top\";>{source}</td></tr>"
+
+            body_html_table += "</table></div><br>"
+
+            # VirusTotal Data
+            if len(virustotal) > 0 and len(virustotal[i]) > 0:
+                vt_data = virustotal[i]['data']['attributes']['last_analysis_stats']
+                harmless = vt_data.get('harmless', "")
+                malicious = vt_data.get('malicious', "")
+                suspicious = vt_data.get('suspicious', "")
+                undetected = vt_data.get('undetected', "")
+                timeout = vt_data.get('timeout', "")
+                reputation = virustotal[i]['data'].get('reputation', "")
+                vtype = virustotal[i]['data'].get('type', "")
+
+                body_html_table += "<div style=\"overflow-x:auto;\"><table class=\"table1\"; style=\"font-family:arial; color:white; font-size: 12px;\"><tr><th colspan=\"3\";>VirusTotal</th></tr>"
+                body_html_table += "<tr><th align=\"left\"; valign=\"top\"; width=\"20%\";>Last Analysis Stats</th><th align=\"left\"; valign=\"top\"; width=\"20%\";>Reputation</th><th align=\"left\"; valign=\"top\"; width=\"20%\";>Type</th></tr>"
+                body_html_table += f"<tr><td align=\"left\"; valign=\"top\";>harmless: {harmless} malicious: {malicious} suspicious: {suspicious} undetected: {undetected} timeout: {timeout}</td><td align=\"left\"; valign=\"top\";>{reputation}</td><td align=\"left\"; valign=\"top\";>{vtype}</td></tr></table></div><br>"
+        
+        body_html_table += "</div></body></html>"
+        return body_html_table
+
+    except Exception as ex:
+        return f"Failed: {str(ex)}"
+    
+    
+    
+    
     import re
 
 def enrichment_python(input_value):
