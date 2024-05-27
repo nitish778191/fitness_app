@@ -1,3 +1,210 @@
+
+
+def urlEnrichmentHTML(anomalits, virustotal, url):
+    
+    rawData = ""
+    resultData = ""
+    returnData = ""
+    keyfields = ""
+    contextData = ""
+    error = ""
+    
+    urllength = len(url)
+        
+    body_html_table = "<!DOCTYPE html><html><head><title>URL Enrichment</title><style>table.table1 {table-layout: fixed; width: 800px; border: 1px solid white; border-collapse: collapse;} table.table1 td {border: 0.5px solid white; padding: 0; white-space:normal; font-weight: lighter;} table.table1 th {border: 0.5px solid white; padding: 0; white-space:normal;}</style></head><body>"
+    
+    try: 
+    
+        i = 0
+    
+        while i < urllength:
+        
+            #Populate URL
+            body_html_table = body_html_table + "<div style=\"overflow-x:auto;\"><table class=\"table1\"; style=\"font-family:arial; color:white; font-size: 12px;\"><tr><th align=\"left\"; valign=\"top\"; width=\"20%\";>URL</th></tr>"
+        
+            body_html_table = body_html_table + "<tr><td align=\"left\"; valign=\"top\";>" + str(url[i]) + "</td></tr></table></div><br>"
+        
+            body_html_table = body_html_table + "<div style=\"overflow-x:auto;\"><table class=\"table1\"; style=\"font-family:arial; color:white; font-size: 12px;\"><tr><th align=\"left\"; valign=\"top\"; width=\"20%\";>Anomali</th></tr>"
+            
+            body_html_table = body_html_table + "<tr><th align=\"left\"; valign=\"top\"; width=\"20%\"; colspan=\"5\";>Confidence</th><th align=\"left\"; valign=\"top\"; width=\"20%\";>Severity</th><th align=\"left\"; valign=\"top\"; width=\"20%\";>Itype</th><th align=\"left\"; valign=\"top\"; width=\"20%\";>Status</th><th align=\"left\"; valign=\"top\"; width=\"20%\";>Source</th></tr>"
+        
+            anomaliresults = len(anomalits)
+        
+            if anomaliresults > 0:
+            
+                j = 0
+            
+                while j < anomaliresults:
+            
+                    if url[i] == anomalits[j]['url']:
+                    
+                        confidence = anomalits[j]['Confidence']
+                        severity = anomalits[j]['Severity']
+                        itype = anomalits[j]['itype']
+                        status = anomalits[j]['Status']
+                        source = anomalits[j]['Source']
+                    
+                        j+=1
+                
+                        body_html_table = body_html_table + "<tr><td align=\"left\"; valign=\"top\";>" + str(confidence) + "</td><td align=\"left\"; valign=\"top\";>" + str(severity) + "</td><td align=\"left\"; valign=\"top\";>" + str(itype) + "</td><td align=\"left\"; valign=\"top\";>" + str(status) + "</td><td align=\"left\"; valign=\"top\";>" + str(source) + "</td></tr>"
+        
+                    else:
+                        j+=1
+            
+                body_html_table = body_html_table + "</table></div><br>"
+        
+            else:
+                confidence = ""
+                severity = ""
+                itype = ""
+                status = ""
+                source = ""
+            
+                body_html_table = body_html_table + "<tr><td align=\"left\"; valign=\"top\"; >" + str(confidence) + "</td><td align=\"left\"; valign=\"top\";>" + str(severity) + "</td><td align=\"left\"; valign=\"top\";>" + str(itype) + "</td><td align=\"left\"; valign=\"top\";>" + str(status) + "</td><td align=\"left\"; valign=\"top\";>" + str(source) + "</td></tr></table></div><br>"
+            
+            if len(virustotal)>0 and len(virustotal[i]) > 0:
+                harmless = virustotal[i]['data']['attributes']['last_analysis_stats']['harmless']
+                malicious = virustotal[i]['data']['attributes']['last_analysis_stats']['malicious']
+                suspicious = virustotal[i]['data']['attributes']['last_analysis_stats']['suspicious']
+                undetected = virustotal[i]['data']['attributes']['last_analysis_stats']['undetected']
+                timeout = virustotal[i]['data']['attributes']['last_analysis_stats']['timeout']
+                reputation = virustotal[i]['data']['reputation']
+                Type = virustotal[i]['data']['type']
+        
+            else:
+                harmless = ""
+                malicious = ""
+                suspicious = ""
+                undetected = ""
+                timeout = ""
+                status = ""
+                Type = ""
+        
+            #HTML Table VirusTotal Enrichment
+            body_html_table = body_html_table + "<div style=\"overflow-x:auto;\"><table class=\"table1\"; style=\"font-family:arial; color:white; font-size: 12px;\"><tr><th colspan=\"3\";>VirusTotal</th></tr>"
+        
+            body_html_table = body_html_table + "<tr><th align=\"left\"; valign=\"top\"; width=\"20%\";>Last Analysis Stats</th><th align=\"left\"; valign=\"top\"; width=\"20%\";>Status</th><th align=\"left\"; valign=\"top\"; width=\"20%\";>Type</th></tr>"
+        
+            body_html_table = body_html_table + "<tr><td align=\"left\"; valign=\"top\";>" + "harmless: " + str(harmless) + " malicious: " + str(malicious) + " suspicious: " + str(suspicious) + " undetected: " + str(undetected) + " timeout: " + str(timeout) + "</td><td align=\"left\"; valign=\"top\";>" + str(status) + "</td><td align=\"left\"; valign=\"top\";>" + str(Type) +  "</td></tr></table></div><br>"
+            
+            i+=1
+    
+            if i == (urllength):
+                #End the HTML content
+                body_html_table = body_html_table + "</div></body></html>"
+                
+                returnData = body_html_table
+
+            else:
+                continue
+    
+    except Exception as ex:
+        error = str(ex)
+    
+    if error == "":
+        resultData = "Successful"
+    else:
+        resultData = "Failed"
+    
+    return resultData
+
+
+Inputs are
+anomalits:
+
+[
+  {
+    "Confidence": 0,
+    "Severity": "high",
+    "Created": "2023-04-26T23:06:10.075Z",
+    "Modified": "2024-05-07T22:26:48.869Z",
+    "itype": "phish_domain",
+    "Source": "Mandiant - Indicators",
+    "Status": "falsepos",
+    "RiskScore": 0,
+    "Reputation": 0.0,
+    "ASN": "15169",
+    "Country": "US",
+    "Latitude": 37.751,
+    "Longitude": -97.822,
+    "Organization": "Google Servers",
+    "IPAddress": "172.217.168.68",
+    "Details": "imported by user 42060 Confirmed as false positive",
+    "url": "www.google.com",
+    "riskLevel": "1"
+  }
+]
+
+
+          }
+        },
+        "reputation": 198,
+        "whois": "Admin Country: US\nAdmin Organization: Google LLC\nAdmin State/Province: CA\nCreation Date: 1997-09-15T04:00:00Z\nCreation Date: 1997-09-15T07:00:00+0000\nDNSSEC: unsigned\nDomain Name: GOOGLE.COM\nDomain Name: google.com\nDomain Status: clientDeleteProhibited (https://www.icann.org/epp#clientDeleteProhibited)\nDomain Status: clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited\nDomain Status: clientTransferProhibited (https://www.icann.org/epp#clientTransferProhibited)\nDomain Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited\nDomain Status: clientUpdateProhibited (https://www.icann.org/epp#clientUpdateProhibited)\nDomain Status: clientUpdateProhibited https://icann.org/epp#clientUpdateProhibited\nDomain Status: serverDeleteProhibited (https://www.icann.org/epp#serverDeleteProhibited)\nDomain Status: serverDeleteProhibited https://icann.org/epp#serverDeleteProhibited\nDomain Status: serverTransferProhibited (https://www.icann.org/epp#serverTransferProhibited)\nDomain Status: serverTransferProhibited https://icann.org/epp#serverTransferProhibited\nDomain Status: serverUpdateProhibited (https://www.icann.org/epp#serverUpdateProhibited)\nDomain Status: serverUpdateProhibited https://icann.org/epp#serverUpdateProhibited\nName Server: NS1.GOOGLE.COM\nName Server: NS2.GOOGLE.COM\nName Server: NS3.GOOGLE.COM\nName Server: NS4.GOOGLE.COM\nName Server: ns1.google.com\nName Server: ns2.google.com\nName Server: ns3.google.com\nName Server: ns4.google.com\nRegistrant Country: US\nRegistrant Email: ca4484b9e50182bds@\nRegistrant Organization: 3307059bbb3149c4\nRegistrant State/Province: b1952dfc047df18a\nRegistrar Abuse Contact Email: abusecomplaints@markmonitor.com\nRegistrar Abuse Contact Phone: +1.2086851750\nRegistrar IANA ID: 292\nRegistrar Registration Expiration Date: 2028-09-13T07:00:00+0000\nRegistrar URL: http://www.markmonitor.com\nRegistrar WHOIS Server: whois.markmonitor.com\nRegistrar: MarkMonitor Inc.\nRegistrar: MarkMonitor, Inc.\nRegistry Domain ID: 2138514_DOMAIN_COM-VRSN\nRegistry Expiry Date: 2028-09-14T04:00:00Z\nTech Country: US\nTech Organization: Google LLC\nTech State/Province: CA\nUpdated Date: 2019-09-09T15:39:04+0000\nUpdated Date: 2019-09-09T15:39:04Z",
+        "last_analysis_stats": {
+          "malicious": 0,
+          "suspicious": 1,
+          "undetected": 23,
+          "harmless": 69,
+          "timeout": 0
+        },
+        "last_update_date": 1568043544,
+        "tld": "com",
+        "threat_severity": {
+          "version": "D3",
+          "threat_severity_level": "SEVERITY_NONE",
+          "threat_severity_data": {
+            "has_bad_communicating_files_high": true,
+            "has_bad_communicating_files_medium": true,
+            "has_bad_downloaded_files_medium": true,
+            "belongs_to_bad_collection": true,
+            "domain_rank": "3"
+          },
+          "last_analysis_date": "1716595213",
+          "level_description": "Severity NONE because it has no detections."
+        },
+        "last_dns_records_date": 1716665532
+      },
+      "context_attributes": {
+        "detected_communicating_files_count": 100,
+        "referring_files_max_detections": 58,
+        "detected_downloaded_files_count": 100,
+        "detected_referring_files_count": 100,
+        "detected_urls_count": 100,
+        "communicating_files_max_detections": 67,
+        "downloaded_files_max_detections": 38,
+        "urls_max_detections": 3
+      }
+    }
+  ],
+  "meta": {
+    "total_hits": 5,
+    "allowed_orders": [
+      "creation_date",
+      "last_modification_date",
+      "last_update_date",
+      "positives"
+    ],
+    "days_back": 90
+  },
+  "links": {
+    "self": "https://www.virustotal.com/api/v3/intelligence/search?query=entity:domain+domain_regex:www.google.com&descriptors_only=false"
+  }
+}
+
+
+Url:
+
+["www.google.com"]
+
+
+The output is error that. list indices must be integers or slices, not str
+ChatGPT
+The error you're encountering, "list indices must be integers or slices, not str," suggests that somewhere in your code, a list is being accessed using a string index instead of an integer. In the provided function, it's likely happening within the loops where you're working with the anomalits and virustotal dictionaries.
+
+Here's the corrected version of your function with improved structure and better handling of the dictionaries:
+
+python
+Copy code
 def urlEnrichmentHTML(anomalits, virustotal, url):
     
     body_html_table = "<!DOCTYPE html><html><head><title>URL Enrichment</title><style>table.table1 {table-layout: fixed; width: 800px; border: 1px solid white; border-collapse: collapse;} table.table1 td {border: 0.5px solid white; padding: 0; white-space:normal; font-weight: lighter;} table.table1 th {border: 0.5px solid white; padding: 0; white-space:normal;}</style></head><body>"
@@ -44,8 +251,122 @@ def urlEnrichmentHTML(anomalits, virustotal, url):
 
     except Exception as ex:
         return f"Failed: {str(ex)}"
+Key Improvements
+Loop Structure: Used for loops for better readability and clarity.
+Accessing Dictionary Values: Used .get() to access dictionary values safely and avoid KeyError.
+String Concatenation: Improved string concatenation using f-strings for better readability.
+Usage
+To call this function, simply pass the anomalits, virustotal, and url lists:
+
+python
+Copy code
+anomalits = [
+    {
+        "Confidence": 0,
+        "Severity": "high",
+        "Created": "2023-04-26T23:06:10.075Z",
+        "Modified": "2024-05-07T22:26:48.869Z",
+        "itype": "phish_domain",
+        "Source": "Mandiant - Indicators",
+        "Status": "falsepos",
+        "RiskScore": 0,
+        "Reputation": 0.0,
+        "ASN": "15169",
+        "Country": "US",
+        "Latitude": 37.751,
+        "Longitude": -97.822,
+        "Organization": "Google Servers",
+        "IPAddress": "172.217.168.68",
+        "Details": "imported by user 42060 Confirmed as false positive",
+        "url": "www.google.com",
+        "riskLevel": "1"
+    }
+]
+
+virustotal = [
+    {
+        "data": {
+            "attributes": {
+                "last_analysis_stats": {
+                    "malicious": 0,
+                    "suspicious": 1,
+                    "undetected": 23,
+                    "harmless": 69,
+                    "timeout": 0
+                },
+                "reputation": 198,
+                "type": "domain"
+            }
+        }
+    }
+]
+
+url = ["www.google.com"]
+
+html_output = urlEnrichmentHTML(anomalits, virustotal, url)
+print(html_output)
+This function should now handle the data correctly and generate the HTML output as expected.
+
+
+
+
+
+Failed: list indices must be integers or slices, not str
+
+5 s 633 ms
+ChatGPT
+The error message indicates that there's an issue with how the function accesses elements within the virustotal list. Let's correct the function to properly handle the data structures, ensuring all indices and accesses are correctly handled.
+
+Here's the revised function:
+
+python
+Copy code
+def urlEnrichmentHTML(anomalits, virustotal, url):
     
+    body_html_table = "<!DOCTYPE html><html><head><title>URL Enrichment</title><style>table.table1 {table-layout: fixed; width: 800px; border: 1px solid white; border-collapse: collapse;} table.table1 td {border: 0.5px solid white; padding: 0; white-space:normal; font-weight: lighter;} table.table1 th {border: 0.5px solid white; padding: 0; white-space:normal;}</style></head><body>"
     
+    try: 
+        for i in range(len(url)):
+            # Populate URL
+            body_html_table += f"<div style=\"overflow-x:auto;\"><table class=\"table1\" style=\"font-family:arial; color:white; font-size: 12px;\"><tr><th align=\"left\" valign=\"top\" width=\"20%\">URL</th></tr>"
+            body_html_table += f"<tr><td align=\"left\" valign=\"top\">{url[i]}</td></tr></table></div><br>"
+
+            # Anomali Data
+            body_html_table += "<div style=\"overflow-x:auto;\"><table class=\"table1\" style=\"font-family:arial; color:white; font-size: 12px;\"><tr><th align=\"left\" valign=\"top\" width=\"20%\">Anomali</th></tr>"
+            body_html_table += "<tr><th align=\"left\" valign=\"top\" width=\"20%\" colspan=\"5\">Confidence</th><th align=\"left\" valign=\"top\" width=\"20%\">Severity</th><th align=\"left\" valign=\"top\" width=\"20%\">Itype</th><th align=\"left\" valign=\"top\" width=\"20%\">Status</th><th align=\"left\" valign=\"top\" width=\"20%\">Source</th></tr>"
+
+            for anomali in anomalits:
+                if url[i] == anomali['url']:
+                    confidence = anomali.get('Confidence', "")
+                    severity = anomali.get('Severity', "")
+                    itype = anomali.get('itype', "")
+                    status = anomali.get('Status', "")
+                    source = anomali.get('Source', "")
+
+                    body_html_table += f"<tr><td align=\"left\" valign=\"top\">{confidence}</td><td align=\"left\" valign=\"top\">{severity}</td><td align=\"left\" valign=\"top\">{itype}</td><td align=\"left\" valign=\"top\">{status}</td><td align=\"left\" valign=\"top\">{source}</td></tr>"
+
+            body_html_table += "</table></div><br>"
+
+            # VirusTotal Data
+            if i < len(virustotal):
+                vt_data = virustotal[i]['data']['attributes']['last_analysis_stats']
+                harmless = vt_data.get('harmless', "")
+                malicious = vt_data.get('malicious', "")
+                suspicious = vt_data.get('suspicious', "")
+                undetected = vt_data.get('undetected', "")
+                timeout = vt_data.get('timeout', "")
+                reputation = virustotal[i]['data'].get('reputation', "")
+                vtype = virustotal[i]['data'].get('type', "")
+
+                body_html_table += "<div style=\"overflow-x:auto;\"><table class=\"table1\" style=\"font-family:arial; color:white; font-size: 12px;\"><tr><th colspan=\"3\">VirusTotal</th></tr>"
+                body_html_table += "<tr><th align=\"left\" valign=\"top\" width=\"20%\">Last Analysis Stats</th><th align=\"left\" valign=\"top\" width=\"20%\">Reputation</th><th align=\"left\" valign=\"top\" width=\"20%\">Type</th></tr>"
+                body_html_table += f"<tr><td align=\"left\" valign=\"top\">harmless: {harmless} malicious: {malicious} suspicious: {suspicious} undetected: {undetected} timeout: {timeout}</td><td align=\"left\" valign=\"top\">{reputation}</td><td align=\"left\" valign=\"top\">{vtype}</td></tr></table></div><br>"
+        
+        body_html_table += "</div></body></html>"
+        return body_html_table
+
+    except Exception as ex:
+        return f"Failed: {str(ex)}"
     
     
     import re
